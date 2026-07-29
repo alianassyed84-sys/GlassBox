@@ -212,10 +212,10 @@ export default function LiveDemoMockup() {
   };
 
   return (
-    <div className="w-full bg-neutral-900/90 border border-neutral-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-indigo-500/10 text-sans">
+    <div className="w-full bg-neutral-900/90 border border-neutral-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-indigo-500/10 font-sans">
       {/* Top Bar with Windows/Mac style controls + Scenario selector pills */}
-      <div className="px-4 py-3 bg-[#111115] border-b border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+      <div className="px-3.5 py-3 bg-[#111115] border-b border-neutral-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 justify-between sm:justify-start">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-red-500/80" />
             <div className="w-3 h-3 rounded-full bg-amber-500/80" />
@@ -225,71 +225,73 @@ export default function LiveDemoMockup() {
             </span>
           </div>
 
-          <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${currentScenario.badgeColor}`}>
+          <span className={`text-[10px] font-mono px-2 py-0.5 rounded border whitespace-nowrap ${currentScenario.badgeColor}`}>
             {currentScenario.badge}
           </span>
         </div>
 
-        {/* Interactive Scenario Buttons */}
-        <div className="flex items-center gap-1.5 bg-neutral-950 p-1 rounded-xl border border-neutral-800 text-[11px] font-medium overflow-x-auto w-full sm:w-auto justify-center">
-          {SCENARIOS.map((sc, i) => (
+        <div className="flex items-center gap-2 justify-between w-full sm:w-auto">
+          {/* Interactive Scenario Buttons */}
+          <div className="flex items-center gap-1 bg-neutral-950 p-1 rounded-xl border border-neutral-800 text-[11px] font-medium overflow-x-auto max-w-[220px] xs:max-w-none no-scrollbar">
+            {SCENARIOS.map((sc, i) => (
+              <button
+                key={sc.id}
+                onClick={() => selectScenario(i)}
+                className={`px-2.5 py-1 rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                  scenarioIdx === i
+                    ? "bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30"
+                    : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/50"
+                }`}
+              >
+                <span>{sc.badge.split(" ")[0]}</span>
+                <span className="hidden lg:inline">{sc.badge.split(" ").slice(1).join(" ")}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* View Switcher Tabs */}
+          <div className="flex items-center bg-neutral-950 border border-neutral-800 p-0.5 rounded-lg text-xs font-medium shrink-0">
             <button
-              key={sc.id}
-              onClick={() => selectScenario(i)}
-              className={`px-2.5 py-1 rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                scenarioIdx === i
-                  ? "bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30"
-                  : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/50"
+              onClick={() => setActiveTab("graph")}
+              className={`px-2.5 sm:px-3 py-1 rounded-md transition-all text-[11px] sm:text-xs ${
+                activeTab === "graph"
+                  ? "bg-neutral-800 text-white shadow"
+                  : "text-neutral-400 hover:text-neutral-200"
               }`}
             >
-              <span>{sc.badge.split(" ")[0]}</span>
-              <span className="hidden lg:inline">{sc.badge.split(" ").slice(1).join(" ")}</span>
+              Agent DAG
             </button>
-          ))}
-        </div>
-
-        {/* View Switcher Tabs */}
-        <div className="flex items-center bg-neutral-950 border border-neutral-800 p-0.5 rounded-lg text-xs font-medium shrink-0">
-          <button
-            onClick={() => setActiveTab("graph")}
-            className={`px-3 py-1 rounded-md transition-all ${
-              activeTab === "graph"
-                ? "bg-neutral-800 text-white shadow"
-                : "text-neutral-400 hover:text-neutral-200"
-            }`}
-          >
-            Agent Graph
-          </button>
-          <button
-            onClick={() => setActiveTab("simple")}
-            className={`px-3 py-1 rounded-md transition-all ${
-              activeTab === "simple"
-                ? "bg-neutral-800 text-white shadow"
-                : "text-neutral-400 hover:text-neutral-200"
-            }`}
-          >
-            Output View
-          </button>
+            <button
+              onClick={() => setActiveTab("simple")}
+              className={`px-2.5 sm:px-3 py-1 rounded-md transition-all text-[11px] sm:text-xs ${
+                activeTab === "simple"
+                  ? "bg-neutral-800 text-white shadow"
+                  : "text-neutral-400 hover:text-neutral-200"
+              }`}
+            >
+              Summary
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Main Execution Workspace */}
-      <div className="p-4 sm:p-6 min-h-[420px] sm:min-h-[460px] relative flex flex-col justify-between bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/20 via-[#0d0d11] to-[#07070a]">
+      <div className="p-3.5 sm:p-6 min-h-[420px] sm:min-h-[460px] relative flex flex-col justify-between bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/20 via-[#0d0d11] to-[#07070a]">
         
         {/* Goal Input Simulation (Complex Command Typewriter) */}
-        <div className="mb-4">
-          <div className="bg-[#121218] border border-neutral-800 rounded-xl p-3.5 flex items-center justify-between shadow-inner">
-            <div className="flex items-center gap-3 w-full overflow-hidden">
-              <Sparkles size={18} className="text-indigo-400 shrink-0 animate-pulse" />
+        <div className="mb-3.5">
+          <div className="bg-[#121218] border border-neutral-800 rounded-xl p-3 flex items-center justify-between shadow-inner">
+            <div className="flex items-center gap-2.5 w-full min-w-0">
+              <Sparkles size={16} className="text-indigo-400 shrink-0 animate-pulse" />
               <span className="text-xs sm:text-sm font-semibold text-white font-mono tracking-tight truncate">
                 {typedText}
-                <span className="inline-block w-2 h-4 bg-indigo-400 ml-0.5 animate-pulse" />
+                <span className="inline-block w-2 h-3.5 bg-indigo-400 ml-0.5 animate-pulse" />
               </span>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-[10px] uppercase font-mono text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-md border border-indigo-500/20 flex items-center gap-1.5">
-                <RefreshCw size={11} className={phase < 4 ? "animate-spin" : ""} />
-                {phase === 0 ? "Parsing Prompt" : phase < 4 ? "Executing Agents" : "Complete"}
+            <div className="flex items-center gap-2 shrink-0 ml-2">
+              <span className="text-[9px] sm:text-[10px] uppercase font-mono text-indigo-300 bg-indigo-500/10 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-indigo-500/20 flex items-center gap-1">
+                <RefreshCw size={10} className={phase < 4 ? "animate-spin" : ""} />
+                {phase === 0 ? "Parsing" : phase < 4 ? "Executing" : "Complete"}
               </span>
             </div>
           </div>
@@ -297,49 +299,49 @@ export default function LiveDemoMockup() {
 
         {/* Tab 1: Agent Graph View */}
         {activeTab === "graph" && (
-          <div className="flex-1 flex flex-col items-center justify-between relative py-2">
+          <div className="flex-1 flex flex-col items-center justify-between relative py-2 gap-2">
             
             {/* Planner Node */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: phase >= 1 ? 1 : 0.3, y: phase >= 1 ? 0 : -5 }}
               transition={{ duration: 0.4 }}
-              className="w-full max-w-md bg-[#161620] border border-indigo-500/40 rounded-xl p-3.5 shadow-xl shadow-indigo-500/10 z-10"
+              className="w-full max-w-md bg-[#161620] border border-indigo-500/40 rounded-xl p-3 sm:p-3.5 shadow-xl shadow-indigo-500/10 z-10"
             >
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400">
-                    <Brain size={15} />
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400 shrink-0">
+                    <Brain size={14} />
                   </div>
-                  <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                  <span className="text-xs font-bold text-white uppercase tracking-wider font-mono truncate">
                     {currentScenario.plannerTitle}
                   </span>
                 </div>
-                <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 font-mono font-semibold">
+                <span className="text-[9px] sm:text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono font-semibold shrink-0">
                   {phase >= 1 ? currentScenario.plannerBadge : "Initializing"}
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-300 font-mono truncate">
+              <p className="text-[10px] sm:text-[11px] text-neutral-300 font-mono truncate">
                 {currentScenario.plannerDesc}
               </p>
             </motion.div>
 
             {/* Connecting Edges SVG */}
-            <div className="h-10 w-full max-w-md relative flex justify-center">
+            <div className="h-6 sm:h-10 w-full max-w-md relative flex justify-center">
               <svg className="absolute inset-0 w-full h-full stroke-indigo-500/40 overflow-visible" fill="none">
-                <path d="M 120 0 L 70 40" strokeWidth="1.5" strokeDasharray="3 3" />
-                <path d="M 320 0 L 370 40" strokeWidth="1.5" strokeDasharray="3 3" />
+                <path d="M 120 0 L 70 30" strokeWidth="1.5" strokeDasharray="3 3" />
+                <path d="M 320 0 L 370 30" strokeWidth="1.5" strokeDasharray="3 3" />
                 {phase >= 2 && (
                   <>
-                    <motion.circle cx="70" cy="40" r="3.5" fill="#14b8a6" initial={{ r: 0 }} animate={{ r: 3.5 }} />
-                    <motion.circle cx="370" cy="40" r="3.5" fill="#f59e0b" initial={{ r: 0 }} animate={{ r: 3.5 }} />
+                    <motion.circle cx="70" cy="30" r="3.5" fill="#14b8a6" initial={{ r: 0 }} animate={{ r: 3.5 }} />
+                    <motion.circle cx="370" cy="30" r="3.5" fill="#f59e0b" initial={{ r: 0 }} animate={{ r: 3.5 }} />
                   </>
                 )}
               </svg>
             </div>
 
             {/* Parallel Worker Nodes Row */}
-            <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-3.5 z-10">
+            <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-3 z-10">
               
               {/* Worker Node 1 */}
               <motion.div
@@ -347,29 +349,29 @@ export default function LiveDemoMockup() {
                 animate={{ opacity: phase >= 2 ? 1 : 0.3, y: phase >= 2 ? 0 : 10 }}
                 transition={{ duration: 0.4 }}
                 onClick={() => setDrawerOpen(!drawerOpen)}
-                className={`cursor-pointer bg-[#12161b] border rounded-xl p-3.5 shadow-lg transition-all ${
+                className={`cursor-pointer bg-[#12161b] border rounded-xl p-3 sm:p-3.5 shadow-lg transition-all ${
                   drawerOpen
                     ? "border-teal-400 ring-2 ring-teal-500/30"
                     : "border-teal-500/30 hover:border-teal-400"
                 }`}
               >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <div className="p-1 rounded bg-teal-500/20 text-teal-400">
-                      <Cpu size={14} />
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="p-1 rounded bg-teal-500/20 text-teal-400 shrink-0">
+                      <Cpu size={13} />
                     </div>
-                    <span className="text-xs font-bold text-neutral-100">
+                    <span className="text-xs font-bold text-neutral-100 truncate">
                       {currentScenario.worker1Title}
                     </span>
                   </div>
-                  <span className="text-[10px] text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded font-mono">
+                  <span className="text-[9px] sm:text-[10px] text-teal-400 bg-teal-500/10 px-1.5 py-0.5 rounded font-mono shrink-0">
                     {currentScenario.worker1Tag}
                   </span>
                 </div>
-                <p className="text-[11px] text-neutral-300 line-clamp-2 leading-relaxed">
+                <p className="text-[10px] sm:text-[11px] text-neutral-300 line-clamp-2 leading-relaxed">
                   {currentScenario.worker1Desc}
                 </p>
-                <div className="mt-2 pt-1.5 border-t border-neutral-800 flex items-center justify-between text-[10px] text-neutral-400 font-mono">
+                <div className="mt-2 pt-1.5 border-t border-neutral-800 flex items-center justify-between text-[9px] sm:text-[10px] text-neutral-400 font-mono">
                   <span>Latency: {currentScenario.drawerLatency}</span>
                   <span className="text-teal-400 underline hover:text-teal-300">Inspect Trace →</span>
                 </div>
@@ -380,25 +382,25 @@ export default function LiveDemoMockup() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: phase >= 2 ? 1 : 0.3, y: phase >= 2 ? 0 : 10 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
-                className="bg-[#181418] border border-amber-500/30 rounded-xl p-3.5 shadow-lg"
+                className="bg-[#181418] border border-amber-500/30 rounded-xl p-3 sm:p-3.5 shadow-lg"
               >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <div className="p-1 rounded bg-amber-500/20 text-amber-400">
-                      <Layers size={14} />
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="p-1 rounded bg-amber-500/20 text-amber-400 shrink-0">
+                      <Layers size={13} />
                     </div>
-                    <span className="text-xs font-bold text-neutral-100">
+                    <span className="text-xs font-bold text-neutral-100 truncate">
                       {currentScenario.worker2Title}
                     </span>
                   </div>
-                  <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-mono">
+                  <span className="text-[9px] sm:text-[10px] text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded font-mono shrink-0">
                     {currentScenario.worker2Tag}
                   </span>
                 </div>
-                <p className="text-[11px] text-neutral-300 line-clamp-2 leading-relaxed">
+                <p className="text-[10px] sm:text-[11px] text-neutral-300 line-clamp-2 leading-relaxed">
                   {currentScenario.worker2Desc}
                 </p>
-                <div className="mt-2 pt-1.5 border-t border-neutral-800 flex items-center justify-between text-[10px] text-neutral-400 font-mono">
+                <div className="mt-2 pt-1.5 border-t border-neutral-800 flex items-center justify-between text-[9px] sm:text-[10px] text-neutral-400 font-mono">
                   <span>Status: Verified</span>
                   <span className="text-amber-400">Parallel Exec</span>
                 </div>
@@ -406,7 +408,7 @@ export default function LiveDemoMockup() {
             </div>
 
             {/* Connecting Edge to Aggregator */}
-            <div className="h-8 w-full max-w-md relative flex justify-center">
+            <div className="h-6 sm:h-8 w-full max-w-md relative flex justify-center">
               <svg className="w-full h-full stroke-purple-500/40" fill="none">
                 <line x1="50%" y1="0" x2="50%" y2="100%" strokeWidth="1.5" strokeDasharray="3 3" />
               </svg>
@@ -417,22 +419,22 @@ export default function LiveDemoMockup() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: phase >= 4 ? 1 : 0.3, scale: phase >= 4 ? 1 : 0.95 }}
               transition={{ duration: 0.4 }}
-              className="w-full max-w-md bg-[#16121f] border border-purple-500/40 rounded-xl p-3.5 shadow-xl z-10"
+              className="w-full max-w-md bg-[#16121f] border border-purple-500/40 rounded-xl p-3 sm:p-3.5 shadow-xl z-10"
             >
               <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <div className="p-1 rounded bg-purple-500/20 text-purple-400">
-                    <CheckCircle2 size={15} />
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="p-1 rounded bg-purple-500/20 text-purple-400 shrink-0">
+                    <CheckCircle2 size={14} />
                   </div>
-                  <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                  <span className="text-xs font-bold text-white uppercase tracking-wider font-mono truncate">
                     {currentScenario.aggregatorTitle}
                   </span>
                 </div>
-                <span className="text-[10px] text-purple-300 bg-purple-500/10 px-2.5 py-0.5 rounded-full font-mono font-medium border border-purple-500/20">
+                <span className="text-[9px] sm:text-[10px] text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-full font-mono font-medium border border-purple-500/20 shrink-0">
                   {currentScenario.aggregatorBadge}
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-300 font-mono">
+              <p className="text-[10px] sm:text-[11px] text-neutral-300 font-mono truncate">
                 {currentScenario.aggregatorSummary}
               </p>
             </motion.div>
@@ -444,76 +446,76 @@ export default function LiveDemoMockup() {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex-1 bg-[#111116] border border-neutral-800 rounded-xl p-5 text-sans flex flex-col justify-between shadow-inner"
+            className="flex-1 bg-[#111116] border border-neutral-800 rounded-xl p-4 sm:p-5 text-sans flex flex-col justify-between shadow-inner"
           >
             <div>
-              <div className="flex items-center justify-between mb-3 border-b border-neutral-800 pb-3">
-                <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
-                  <Zap size={16} className="text-amber-400" />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3 border-b border-neutral-800 pb-3">
+                <h3 className="text-xs sm:text-sm font-extrabold text-white flex items-center gap-2">
+                  <Zap size={15} className="text-amber-400 shrink-0" />
                   {currentScenario.simpleTitle}
                 </h3>
-                <span className="text-xs text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full font-mono font-semibold">
+                <span className="text-[10px] sm:text-xs text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full font-mono font-semibold">
                   {currentScenario.simpleBadge}
                 </span>
               </div>
 
-              <p className="text-xs text-neutral-300 mb-5 leading-relaxed">
+              <p className="text-xs text-neutral-300 mb-4 leading-relaxed">
                 {currentScenario.simpleDesc}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="bg-[#171720] border border-neutral-800 p-3 rounded-xl">
-                  <span className="text-neutral-400 font-mono text-[10px] uppercase block mb-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                <div className="bg-[#171720] border border-neutral-800 p-2.5 sm:p-3 rounded-xl">
+                  <span className="text-neutral-400 font-mono text-[9px] sm:text-[10px] uppercase block mb-1">
                     {currentScenario.metric1Label}
                   </span>
-                  <span className="text-white font-bold block text-sm">
+                  <span className="text-white font-bold block text-xs sm:text-sm">
                     {currentScenario.metric1Value}
                   </span>
                 </div>
-                <div className="bg-[#171720] border border-neutral-800 p-3 rounded-xl">
-                  <span className="text-neutral-400 font-mono text-[10px] uppercase block mb-1">
+                <div className="bg-[#171720] border border-neutral-800 p-2.5 sm:p-3 rounded-xl">
+                  <span className="text-neutral-400 font-mono text-[9px] sm:text-[10px] uppercase block mb-1">
                     {currentScenario.metric2Label}
                   </span>
-                  <span className="text-white font-bold block text-sm">
+                  <span className="text-white font-bold block text-xs sm:text-sm">
                     {currentScenario.metric2Value}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-neutral-800 flex items-center justify-between text-[11px] text-neutral-400 font-mono">
+            <div className="mt-4 pt-2.5 border-t border-neutral-800 flex items-center justify-between text-[10px] sm:text-[11px] text-neutral-400 font-mono">
               <span>Trace ID: #run_9942</span>
-              <span className="text-emerald-400 flex items-center gap-1.5 font-semibold">
-                <CheckCircle2 size={13} /> Verified by GlassBox Multi-Agent OS
+              <span className="text-emerald-400 flex items-center gap-1 font-semibold">
+                <CheckCircle2 size={12} /> GlassBox Verified
               </span>
             </div>
           </motion.div>
         )}
 
-        {/* Drawer Overlay for Live Code / JSON Inspection */}
+        {/* Drawer Overlay for Live Code / JSON Inspection — Responsive Bottom Sheet on Mobile */}
         <AnimatePresence>
           {drawerOpen && activeTab === "graph" && (
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              initial={{ y: "100%", x: 0 }}
+              animate={{ y: 0, x: 0 }}
+              exit={{ y: "100%", x: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 280 }}
-              className="absolute top-0 right-0 bottom-0 w-full sm:w-80 bg-[#0e1114] border-l border-teal-500/40 p-4 shadow-2xl z-30 flex flex-col justify-between"
+              className="absolute inset-x-0 bottom-0 top-12 sm:top-0 sm:right-0 sm:left-auto sm:w-80 bg-[#0e1114] border-t sm:border-t-0 sm:border-l border-teal-500/40 p-4 shadow-2xl z-30 flex flex-col justify-between rounded-t-2xl sm:rounded-t-none"
             >
               <div>
                 <div className="flex items-center justify-between mb-3 border-b border-neutral-800 pb-2.5">
-                  <span className="text-xs font-bold text-teal-400 uppercase font-mono flex items-center gap-1.5">
-                    <Code2 size={14} /> Trace: {currentScenario.drawerWorkerName}
+                  <span className="text-xs font-bold text-teal-400 uppercase font-mono flex items-center gap-1.5 truncate">
+                    <Code2 size={14} className="shrink-0" /> Trace: {currentScenario.drawerWorkerName}
                   </span>
                   <button
                     onClick={() => setDrawerOpen(false)}
-                    className="text-neutral-400 hover:text-white text-xs px-2 py-0.5 rounded bg-neutral-800"
+                    className="text-neutral-400 hover:text-white text-xs px-2.5 py-1 rounded bg-neutral-800 shrink-0 ml-2"
                   >
                     ✕ Close
                   </button>
                 </div>
 
-                <div className="space-y-3 text-[11px]">
+                <div className="space-y-2.5 text-[11px]">
                   <div className="bg-[#080a0c] border border-neutral-800 p-2.5 rounded-lg font-mono text-neutral-300">
                     <span className="text-neutral-500 block text-[9px] uppercase font-bold mb-1">
                       Input Task Specification
@@ -521,7 +523,7 @@ export default function LiveDemoMockup() {
                     {currentScenario.drawerInput}
                   </div>
 
-                  <div className="bg-[#080a0c] border border-teal-500/30 p-2.5 rounded-lg font-mono text-teal-300 overflow-x-auto">
+                  <div className="bg-[#080a0c] border border-teal-500/30 p-2.5 rounded-lg font-mono text-teal-300 overflow-x-auto max-h-36 sm:max-h-48">
                     <span className="text-teal-400 block text-[9px] uppercase font-bold mb-1">
                       Raw Agent LLM Response
                     </span>
@@ -532,7 +534,7 @@ export default function LiveDemoMockup() {
                 </div>
               </div>
 
-              <div className="text-[10px] text-neutral-400 font-mono flex items-center justify-between border-t border-neutral-800 pt-2.5">
+              <div className="text-[10px] text-neutral-400 font-mono flex items-center justify-between border-t border-neutral-800 pt-2.5 mt-2">
                 <span>Tokens: {currentScenario.drawerTokens}</span>
                 <span className="text-teal-400 font-semibold">Latency: {currentScenario.drawerLatency}</span>
               </div>

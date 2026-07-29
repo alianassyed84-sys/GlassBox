@@ -93,19 +93,27 @@ async function getAuthToken(): Promise<string | null> {
 
   let token: string | null = null;
 
-  if (customTokenGetter) {
-    try {
-      token = await customTokenGetter();
-    } catch {
-      // fallback to global window.Clerk
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (customTokenGetter) {
+      try {
+        token = await customTokenGetter();
+      } catch {
+        // fallback to global window.Clerk
+      }
     }
-  }
 
-  if (!token && typeof window !== "undefined" && (window as unknown as { Clerk?: { session?: { getToken: () => Promise<string | null> } } }).Clerk?.session) {
-    try {
-      token = await (window as unknown as { Clerk: { session: { getToken: () => Promise<string | null> } } }).Clerk.session.getToken();
-    } catch {
-      token = null;
+    if (!token && typeof window !== "undefined" && (window as unknown as { Clerk?: { session?: { getToken: () => Promise<string | null> } } }).Clerk?.session) {
+      try {
+        token = await (window as unknown as { Clerk: { session: { getToken: () => Promise<string | null> } } }).Clerk.session.getToken();
+      } catch {
+        token = null;
+      }
+    }
+
+    if (token) break;
+
+    if (attempt < 2) {
+      await new Promise((r) => setTimeout(r, 200));
     }
   }
 

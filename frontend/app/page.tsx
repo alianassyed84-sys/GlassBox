@@ -150,13 +150,13 @@ export default function LandingPage() {
       </div>
 
       {/* ── Navbar ──────────────────────────────────────────────────────── */}
-      <header className="relative z-20 w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800/50">
-        <div className="flex items-center gap-2.5">
-          <img src="/logo-icon.png" alt="GlassBox Logo" className="w-8 h-8 rounded-lg object-contain shadow-sm" />
-          <span className="text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white bg-gradient-to-r from-neutral-900 dark:from-white via-neutral-600 dark:via-neutral-200 to-indigo-600 dark:to-indigo-300 bg-clip-text text-transparent">
+      <header className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800/50">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <img src="/logo-icon.png" alt="GlassBox Logo" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-sm" />
+          <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white bg-gradient-to-r from-neutral-900 dark:from-white via-neutral-600 dark:via-neutral-200 to-indigo-600 dark:to-indigo-300 bg-clip-text text-transparent">
             GlassBox
           </span>
-          <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full uppercase tracking-wider">
+          <span className="text-[9px] sm:text-[10px] font-mono text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full uppercase tracking-wider hidden xs:inline-block">
             Multi-Agent OS
           </span>
         </div>

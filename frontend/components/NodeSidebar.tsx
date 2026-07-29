@@ -230,19 +230,29 @@ export default function NodeSidebar({
   return (
     <AnimatePresence>
       {selectedNodeId !== null && (
-        <motion.aside
-          key="node-sidebar"
-          initial={{ width: 0, opacity: 0 }}
-          animate={{ width: 440, opacity: 1 }}
-          exit={{ width: 0, opacity: 0 }}
-          transition={{ type: "spring", damping: 28, stiffness: 260 }}
-          className="h-full bg-white dark:bg-[#0f0f0f] border-l border-neutral-200 dark:border-neutral-900 flex flex-col overflow-hidden shrink-0 shadow-[-10px_0_30px_rgba(0,0,0,0.1)] dark:shadow-[-10px_0_30px_rgba(0,0,0,0.5)] transition-colors relative"
-        >
-          {/* Subtle Top Accent Bar */}
-          <div
-            className="h-[3px] w-full shrink-0"
-            style={{ backgroundColor: agentCfg?.accent ?? "#6366f1" }}
+        <>
+          {/* Mobile Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedNodeId(null)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden"
           />
+
+          <motion.aside
+            key="node-sidebar"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            transition={{ type: "spring", damping: 28, stiffness: 260 }}
+            className="fixed inset-x-0 bottom-0 top-12 md:top-0 md:bottom-auto md:relative md:inset-auto md:h-full md:w-[440px] bg-white dark:bg-[#0f0f0f] border-t md:border-t-0 md:border-l border-neutral-200 dark:border-neutral-900 flex flex-col overflow-hidden shrink-0 z-50 md:z-auto shadow-2xl md:shadow-[-10px_0_30px_rgba(0,0,0,0.5)] transition-colors rounded-t-2xl md:rounded-t-none"
+          >
+            {/* Subtle Top Accent Bar */}
+            <div
+              className="h-[3px] w-full shrink-0"
+              style={{ backgroundColor: agentCfg?.accent ?? "#6366f1" }}
+            />
 
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3.5 border-b border-neutral-200 dark:border-neutral-800/80 shrink-0">
@@ -514,6 +524,7 @@ export default function NodeSidebar({
             </div>
           )}
         </motion.aside>
+        </>
       )}
     </AnimatePresence>
   );
