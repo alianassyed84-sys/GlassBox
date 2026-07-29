@@ -88,6 +88,9 @@ async def websocket_run(websocket: WebSocket, run_id: int):
 # ── CORS ──────────────────────────────────────────────────────────────────────
 origins = [
     "http://localhost:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
     os.getenv("FRONTEND_URL", "https://glassbox.vercel.app"),
 ]
 
@@ -100,8 +103,8 @@ if cors_origins_env:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
