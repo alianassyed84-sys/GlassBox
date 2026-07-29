@@ -8,7 +8,7 @@ export const size = {
 };
 export const contentType = "image/png";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://glassbox-9uf2.onrender.com";
 
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

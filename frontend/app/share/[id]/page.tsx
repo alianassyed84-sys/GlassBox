@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import PublicRunView from "./PublicRunView";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://glassbox-9uf2.onrender.com";
 
 interface SharePageProps {
   params: Promise<{ id: string }>;

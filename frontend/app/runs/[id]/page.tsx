@@ -25,7 +25,7 @@ import NetworkStatusIndicator from "@/components/NetworkStatusIndicator";
 import { addPendingAction } from "@/lib/localdb";
 
 const RunGraph = dynamic(() => import("@/components/RunGraph"), { ssr: false });
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = getApiBase();
 
 export default function RunPage() {
   const params = useParams();
@@ -177,7 +177,7 @@ export default function RunPage() {
       };
     }
 
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiBase = getApiBase();
     const wsUrl = apiBase.replace(/^http/, "ws") + `/ws/runs/${runId}`;
 
     const startPolling = () => {

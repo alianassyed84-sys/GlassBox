@@ -30,7 +30,9 @@ interface GuessResult {
   correct_guess_count: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { getApiBase } from "@/lib/api";
+
+const API_BASE = getApiBase();
 
 export default function ChallengeVisitorPage() {
   const params = useParams();

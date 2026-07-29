@@ -18,7 +18,9 @@ interface Challenge {
   run_name?: string | null;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { getApiBase } from "@/lib/api";
+
+const API_BASE = getApiBase();
 
 function getDifficulty(attemptCount: number, correctCount: number): { label: string; color: string; bg: string } {
   if (attemptCount === 0) return { label: "Unchallenged", color: "text-neutral-600 dark:text-neutral-400", bg: "bg-neutral-100 dark:bg-neutral-800" };

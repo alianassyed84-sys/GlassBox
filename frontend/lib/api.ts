@@ -10,7 +10,17 @@ import {
   getRuns as getLocalRuns,
 } from "./localdb";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+export function getApiBase(): string {
+  if (process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_URL.trim()) {
+    return process.env.NEXT_PUBLIC_API_URL.trim();
+  }
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+    return "https://glassbox-9uf2.onrender.com";
+  }
+  return "http://localhost:8000";
+}
+
+const API_BASE = getApiBase();
 
 
 export interface Run {

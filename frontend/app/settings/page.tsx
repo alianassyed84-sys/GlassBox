@@ -18,7 +18,9 @@ interface ApiKeyCreated extends ApiKeyItem {
   plain_key: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { getApiBase } from "@/lib/api";
+
+const API_BASE = getApiBase();
 
 export default function SettingsPage() {
   const router = useRouter();
