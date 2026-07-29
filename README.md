@@ -1,12 +1,20 @@
-# Glassbox 🔍
+<p align="center">
+  <img src="frontend/public/logo.png" alt="Glassbox Logo" width="160" />
+</p>
 
-[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
-[![Next.js 16](https://img.shields.io/badge/Frontend-Next.js%2016-000000.svg)](https://nextjs.org/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+<h1 align="center">Glassbox</h1>
 
-> Open-source time-travel debugger for multi-agent AI systems. See every step your AI takes. Catch mistakes. Replay just the broken part.
+<p align="center">
+  <strong>Open-source time-travel debugger for multi-agent AI systems. See every step your AI takes. Catch mistakes. Replay just the broken part.</strong>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python"></a>
+  <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg" alt="FastAPI"></a>
+  <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Frontend-Next.js%2016-000000.svg" alt="Next.js"></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+</p>
 
 Repository: [https://github.com/alianassyed84-sys/GlassBox](https://github.com/alianassyed84-sys/GlassBox)
 
