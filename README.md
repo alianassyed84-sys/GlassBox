@@ -33,12 +33,11 @@ When building complex multi-agent LLM pipelines (Planner/Worker/Aggregator patte
 - 🕸️ **Visual Execution Graph**: Real-time graph visualization powered by React Flow with active node streaming.
 - ⏳ **Time-Travel Replay**: Fork and re-execute pipeline runs from any historic DAG node without re-running prior successful steps.
 - 🤝 **Interactive Clarification System**: Agents can pause pipeline execution to request human user input before proceeding.
-- 👁️ **Dual View Modes**:
-  - **Simple Mode**: Non-technical progress view for business stakeholders.
-  - **Developer Mode**: Deep technical view with prompt/response JSON viewer, token counts, and span telemetry.
-- 🏆 **Challenge Mode & Public Leaderboard**: Submit agent prompts to adversarial community evaluation benchmarks.
+- 📱 **Mobile UI/UX Overhaul**: Completely responsive design. Graph inspect drawers convert to touch-friendly bottom sheets on mobile devices.
+- 🔐 **Premium OTP inputs**: Separated digit-box layout with hover states and glow focus indicators for secure, friction-free login.
+- 📡 **Zero-Crash Resilient Pipeline**: Fallback synthetic execution framework that safeguards pipeline visualizers even if external LLM APIs are rate-limited or keys are unconfigured.
 - 🔌 **Google Workspace Integrations**: Built-in tools for live Google Docs, Sheets, Gmail, and Calendar interactions.
-- 📱 **PWA & Offline Support**: Service worker caching and IndexedDB offline state persistence via `idb`.
+- 📶 **PWA & Offline Support**: Service worker caching and IndexedDB offline state persistence via `idb`.
 
 ---
 
