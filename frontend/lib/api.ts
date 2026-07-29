@@ -12,12 +12,10 @@ import {
 
 export function getApiBase(): string {
   if (process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_URL.trim()) {
-    return process.env.NEXT_PUBLIC_API_URL.trim();
+    return process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/$/, "");
   }
-  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
-    return "https://glassbox-9uf2.onrender.com";
-  }
-  return "http://localhost:8000";
+  // Default to live Render backend — never localhost in SSR or production
+  return "https://glassbox-9uf2.onrender.com";
 }
 
 export function getWsUrl(runId: number): string {
