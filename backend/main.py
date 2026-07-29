@@ -174,7 +174,9 @@ async def health_check(db: Session = Depends(get_db)):
     # Test Clerk key exists
     health["checks"]["clerk_secret"] = "set" if os.getenv("CLERK_SECRET_KEY") else "MISSING"
     
-    return health
+@app.api_route("/ping", methods=["GET", "HEAD"])
+def ping():
+    return {"status": "ok", "pong": True}
 
 
 # ── Runs ──────────────────────────────────────────────────────────────────────
