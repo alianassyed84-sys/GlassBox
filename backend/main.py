@@ -60,11 +60,34 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    groq_key = os.getenv("GROQ_API_KEY")
+    db_url = os.getenv("DATABASE_URL")
+    clerk_key = os.getenv("CLERK_SECRET_KEY")
+    redis_url = os.getenv("REDIS_URL")
+    
+    print("=== GLASSBOX STARTUP CHECK ===")
+    print(f"GROQ_API_KEY: {'SET' if groq_key else 'MISSING'}")
+    print(f"DATABASE_URL: {'SET' if db_url else 'MISSING'}")
+    print(f"CLERK_SECRET_KEY: {'SET' if clerk_key else 'MISSING'}")
+    print(f"REDIS_URL: {'SET' if redis_url else 'MISSING'}")
+    print("==============================")
+    
     await ws_manager.startup()
     yield
     await ws_manager.shutdown()
 
 app = FastAPI(title="GlassBox API", version="1.0.0", lifespan=lifespan)
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    print(f"Unhandled error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": str(exc),
+            "type": type(exc).__name__
+        }
+    )
 
 @app.exception_handler(SQLAlchemyError)
 async def db_exception_handler(request: Request, exc: SQLAlchemyError):
@@ -86,21 +109,6 @@ async def websocket_run(websocket: WebSocket, run_id: int):
 
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
-origins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-    os.getenv("FRONTEND_URL", "https://glassbox.vercel.app"),
-]
-
-cors_origins_env = os.getenv("CORS_ORIGINS", "")
-if cors_origins_env:
-    for extra_origin in cors_origins_env.split(","):
-        extra = extra_origin.strip()
-        if extra and extra not in origins:
-            origins.append(extra)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -145,11 +153,28 @@ def root():
 
 
 @app.api_route("/health", methods=["GET", "HEAD"])
-def health_check():
-    return {
+async def health_check(db: Session = Depends(get_db)):
+    health = {
         "status": "ok",
-        "service": "glassbox-backend"
+        "service": "glassbox-backend",
+        "checks": {}
     }
+    
+    # Test database connection
+    try:
+        db.execute(text("SELECT 1"))
+        health["checks"]["database"] = "ok"
+    except Exception as e:
+        health["checks"]["database"] = str(e)
+        health["status"] = "degraded"
+    
+    # Test Groq API key exists
+    health["checks"]["groq_api_key"] = "set" if os.getenv("GROQ_API_KEY") else "MISSING"
+    
+    # Test Clerk key exists
+    health["checks"]["clerk_secret"] = "set" if os.getenv("CLERK_SECRET_KEY") else "MISSING"
+    
+    return health
 
 
 # ── Runs ──────────────────────────────────────────────────────────────────────

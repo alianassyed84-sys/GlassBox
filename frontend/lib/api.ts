@@ -20,6 +20,12 @@ export function getApiBase(): string {
   return "http://localhost:8000";
 }
 
+export function getWsUrl(runId: number): string {
+  const apiBase = getApiBase();
+  const wsBase = apiBase.replace(/^https:/, "wss:").replace(/^http:/, "ws:");
+  return `${wsBase}/ws/runs/${runId}`;
+}
+
 const API_BASE = getApiBase();
 
 

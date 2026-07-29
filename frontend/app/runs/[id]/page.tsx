@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserButton, useAuth } from "@clerk/nextjs";
 import { Monitor, Eye, Download, Trophy, Check, X, Volume2, VolumeX, Search, Share2 } from "lucide-react";
-import { api, Node, Run, setAuthTokenGetter } from "@/lib/api";
+import { api, Node, Run, setAuthTokenGetter, getApiBase, getWsUrl } from "@/lib/api";
 import { useGlassboxStore } from "@/lib/store";
 import { playNodeCompleteSound } from "@/lib/sound";
 import MagneticButton from "@/components/MagneticButton";
@@ -177,8 +177,7 @@ export default function RunPage() {
       };
     }
 
-    const apiBase = getApiBase();
-    const wsUrl = apiBase.replace(/^http/, "ws") + `/ws/runs/${runId}`;
+    const wsUrl = getWsUrl(runId);
 
     const startPolling = () => {
       if (pollingInterval) return;
