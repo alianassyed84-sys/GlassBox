@@ -68,26 +68,39 @@ export function setAuthTokenGetter(getter: () => Promise<string | null>) {
   customTokenGetter = getter;
 }
 
+let _cachedToken: string | null = null;
+let _tokenExpiry = 0;
+
 async function getAuthToken(): Promise<string | null> {
+  const now = Date.now();
+  if (_cachedToken && now < _tokenExpiry) {
+    return _cachedToken;
+  }
+
+  let token: string | null = null;
+
   if (customTokenGetter) {
     try {
-      const t = await customTokenGetter();
-      if (t) return t;
+      token = await customTokenGetter();
     } catch {
       // fallback to global window.Clerk
     }
   }
 
-  if (typeof window !== "undefined" && (window as unknown as { Clerk?: { session?: { getToken: () => Promise<string | null> } } }).Clerk?.session) {
+  if (!token && typeof window !== "undefined" && (window as unknown as { Clerk?: { session?: { getToken: () => Promise<string | null> } } }).Clerk?.session) {
     try {
-      const token = await (window as unknown as { Clerk: { session: { getToken: () => Promise<string | null> } } }).Clerk.session.getToken();
-      return token;
+      token = await (window as unknown as { Clerk: { session: { getToken: () => Promise<string | null> } } }).Clerk.session.getToken();
     } catch {
-      return null;
+      token = null;
     }
   }
 
-  return null;
+  if (token) {
+    _cachedToken = token;
+    _tokenExpiry = now + 45000; // cache for 45 seconds for instant zero-latency sub-requests
+  }
+
+  return token;
 }
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
