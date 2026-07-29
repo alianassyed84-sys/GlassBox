@@ -44,25 +44,29 @@ export default function TemplatesPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-neutral-900 dark:text-neutral-100 flex flex-col transition-colors">
       {/* Navbar */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 transition-colors">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 transition-colors">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <button
             onClick={() => router.push("/")}
-            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-sm flex items-center gap-1.5 transition-colors font-medium"
+            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-xs sm:text-sm flex items-center gap-1.5 transition-colors font-medium shrink-0"
           >
             <img src="/logo-icon.png" alt="GlassBox Logo" className="w-5 h-5 rounded object-contain" />
-            <span>← GlassBox</span>
+            <span className="hidden xs:inline">← GlassBox</span>
+            <span className="xs:hidden">←</span>
           </button>
-          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800" />
-          <span className="font-semibold text-sm flex items-center gap-2 text-neutral-900 dark:text-white">
-            <Layers size={16} className="text-indigo-500" /> Public Template Gallery
+          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800 shrink-0" />
+          <span className="font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 text-neutral-900 dark:text-white truncate">
+            <Layers size={16} className="text-indigo-500 shrink-0" />
+            <span className="truncate">Public Templates</span>
           </span>
         </div>
-        <ThemeToggle />
+        <div className="shrink-0 ml-2">
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-10 space-y-8">
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8">
         <div>
           <h1 className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight flex items-center gap-2">
             <Sparkles size={24} className="text-indigo-500" />

@@ -124,33 +124,36 @@ export default function PublicRunView({ runId }: PublicRunViewProps) {
       </div>
 
       {/* ── Topbar ──────────────────────────────────────────────────────── */}
-      <header className="flex items-center gap-4 px-5 py-3 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 z-10 shadow-xs dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-colors">
-        <Link
-          href="/"
-          className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-sm flex items-center gap-1.5 transition-colors font-medium"
-        >
-          <img src="/logo-icon.png" alt="GlassBox Logo" className="w-5 h-5 rounded object-contain" />
-          <span>← GlassBox</span>
-        </Link>
-        <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800" />
-        <div className="flex items-center gap-3 min-w-0">
-          <span className={`text-sm font-medium flex items-center gap-1.5 ${statusColor[run.status]}`}>
-            <span
-              className={`w-2 h-2 rounded-full ${
-                run.status === "completed"
-                  ? "bg-emerald-400"
-                  : run.status === "error"
-                  ? "bg-red-400"
-                  : "bg-amber-400 animate-pulse"
-              }`}
-            />
-            {run.status}
-          </span>
-          <span className="text-neutral-600 dark:text-neutral-400 text-sm truncate max-w-md font-medium">
-            {run.name ?? run.goal}
-          </span>
+      <header className="flex items-center justify-between gap-2 sm:gap-4 px-3.5 sm:px-5 py-2.5 sm:py-3 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 z-10 shadow-xs dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-colors">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <Link
+            href="/"
+            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-xs sm:text-sm flex items-center gap-1.5 transition-colors font-medium shrink-0"
+          >
+            <img src="/logo-icon.png" alt="GlassBox Logo" className="w-5 h-5 rounded object-contain" />
+            <span className="hidden xs:inline">← GlassBox</span>
+            <span className="xs:hidden">←</span>
+          </Link>
+          <div className="h-3.5 sm:h-4 w-px bg-neutral-200 dark:bg-neutral-800 shrink-0" />
+          <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+            <span className={`text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-1.5 shrink-0 ${statusColor[run.status]}`}>
+              <span
+                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
+                  run.status === "completed"
+                    ? "bg-emerald-400"
+                    : run.status === "error"
+                    ? "bg-red-400"
+                    : "bg-amber-400 animate-pulse"
+                }`}
+              />
+              {run.status}
+            </span>
+            <span className="text-neutral-600 dark:text-neutral-400 text-xs sm:text-sm truncate max-w-[110px] xs:max-w-xs sm:max-w-md font-medium">
+              {run.name ?? run.goal}
+            </span>
+          </div>
         </div>
-        <div className="ml-auto flex items-center gap-2.5">
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           <ThemeToggle />
           <button
             onClick={toggleSound}

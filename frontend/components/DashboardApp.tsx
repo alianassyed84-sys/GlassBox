@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { UserButton, useAuth, useUser } from "@clerk/nextjs";
-import { Trophy, Key, Sparkles, ArrowRight, Volume2, VolumeX, Download } from "lucide-react";
+import { Trophy, Key, Sparkles, ArrowRight, Volume2, VolumeX, Download, Menu, X, Search, Layers } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import { api, Run, setAuthTokenGetter } from "@/lib/api";
 import { useGlassboxStore } from "@/lib/store";
 import CommandPalette from "@/components/CommandPalette";
@@ -22,6 +23,7 @@ export default function DashboardApp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [runs, setRuns] = useState<Run[]>([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isOnline } = useNetworkStatus();
   const { isInstallable, installApp } = usePWAInstall();
   const { setPaletteOpen, soundEnabled, toggleSound, reset, addToast } = useGlassboxStore();
@@ -55,19 +57,20 @@ export default function DashboardApp() {
       <CommandPalette runs={runs} />
       <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-neutral-900 dark:text-neutral-100 flex flex-col font-sans transition-colors">
         {/* Top Navbar */}
-        <header className="w-full flex items-center justify-between px-6 py-4 border-b border-neutral-200/80 dark:border-neutral-800/80 bg-white/90 dark:bg-[#0d0d0d]/90 backdrop-blur-md transition-colors">
-          <div className="flex items-center gap-2.5">
+        <header className="relative z-30 w-full flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-neutral-200/80 dark:border-neutral-800/80 bg-white/90 dark:bg-[#0d0d0d]/90 backdrop-blur-md transition-colors">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <img src="/logo-icon.png" alt="GlassBox Logo" className="w-7 h-7 rounded-lg object-contain shadow-xs" />
             <span className="font-bold tracking-tight text-xl bg-gradient-to-r from-neutral-900 via-indigo-900 to-indigo-600 dark:from-white dark:via-neutral-200 dark:to-indigo-300 bg-clip-text text-transparent">
               GlassBox
             </span>
-            <span className="text-xs text-neutral-500 border border-neutral-200 dark:border-neutral-800 px-2 py-0.5 rounded-full font-mono">
+            <span className="text-xs text-neutral-500 border border-neutral-200 dark:border-neutral-800 px-2 py-0.5 rounded-full font-mono hidden xs:inline-block">
               v1.0
             </span>
             <NetworkStatusIndicator />
           </div>
 
-          <div className="flex items-center gap-2.5">
+          {/* Desktop Navbar Controls */}
+          <div className="hidden md:flex items-center gap-2.5">
             {isInstallable && (
               <button
                 id="install-pwa-btn"
@@ -100,7 +103,7 @@ export default function DashboardApp() {
 
             <button
               onClick={() => router.push("/leaderboard")}
-              className="text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors bg-white/50 dark:bg-neutral-900/50"
+              className="text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors bg-white/50 dark:bg-neutral-900/50 font-medium"
             >
               <Trophy size={13} className="text-amber-500 dark:text-amber-400" />
               Leaderboard
@@ -108,7 +111,7 @@ export default function DashboardApp() {
 
             <button
               onClick={() => router.push("/settings")}
-              className="text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors bg-white/50 dark:bg-neutral-900/50"
+              className="text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors bg-white/50 dark:bg-neutral-900/50 font-medium"
             >
               <Key size={13} className="text-indigo-600 dark:text-indigo-400" />
               API Keys
@@ -122,6 +125,112 @@ export default function DashboardApp() {
             </kbd>
             <UserButton />
           </div>
+
+          {/* Mobile Topbar Controls */}
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle Dashboard Menu"
+              className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors"
+            >
+              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+            <UserButton />
+          </div>
+
+          {/* Mobile Drawer */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="absolute top-full left-0 right-0 z-40 bg-white/95 dark:bg-[#0d0d0d]/95 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden md:hidden"
+              >
+                <div className="p-4 flex flex-col gap-2.5">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setPaletteOpen(true);
+                    }}
+                    className="flex items-center justify-between p-3 rounded-xl bg-neutral-100/80 dark:bg-neutral-900/80 border border-neutral-200/80 dark:border-neutral-800/80 text-left font-medium text-xs text-neutral-700 dark:text-neutral-300"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Search size={14} className="text-indigo-500" />
+                      Search &amp; Command Palette
+                    </span>
+                    <kbd className="font-mono text-[10px] bg-neutral-200 dark:bg-neutral-800 px-1.5 py-0.5 rounded">⌘K</kbd>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      router.push("/leaderboard");
+                    }}
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-left font-semibold text-xs text-neutral-800 dark:text-neutral-200"
+                  >
+                    <Trophy size={15} className="text-amber-500" />
+                    Community Leaderboard
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      router.push("/templates");
+                    }}
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-left font-semibold text-xs text-neutral-800 dark:text-neutral-200"
+                  >
+                    <Layers size={15} className="text-indigo-500" />
+                    Public Templates Gallery
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      router.push("/settings");
+                    }}
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-left font-semibold text-xs text-neutral-800 dark:text-neutral-200"
+                  >
+                    <Key size={15} className="text-indigo-500" />
+                    API Keys &amp; Settings
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      toggleSound();
+                    }}
+                    className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-left font-semibold text-xs text-neutral-800 dark:text-neutral-200"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      {soundEnabled ? <Volume2 size={15} className="text-indigo-500" /> : <VolumeX size={15} className="text-neutral-400" />}
+                      Audio Effects
+                    </span>
+                    <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${soundEnabled ? "bg-indigo-500/10 text-indigo-500" : "bg-neutral-200 dark:bg-neutral-800 text-neutral-400"}`}>
+                      {soundEnabled ? "On" : "Muted"}
+                    </span>
+                  </button>
+
+                  {isInstallable && (
+                    <button
+                      onClick={async () => {
+                        setMobileMenuOpen(false);
+                        const success = await installApp();
+                        if (success) {
+                          addToast("Installed GlassBox App! 🎉", "success");
+                        }
+                      }}
+                      className="w-full mt-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2"
+                    >
+                      <Download size={14} />
+                      Install Glassbox App
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </header>
 
         <main className="flex-1 flex flex-col items-center justify-center px-4 -mt-8 py-12">

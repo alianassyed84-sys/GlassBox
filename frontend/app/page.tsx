@@ -21,7 +21,8 @@ import {
   Flame,
   Layers,
   Brain,
-  X
+  X,
+  Menu
 } from "lucide-react";
 import LiveDemoMockup from "@/components/LiveDemoMockup";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -75,6 +76,7 @@ export default function LandingPage() {
   const { isInstallable, installApp } = usePWAInstall();
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [dismissedInstallBanner, setDismissedInstallBanner] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -117,24 +119,22 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-[#070709] text-neutral-900 dark:text-neutral-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden">
+    <div className="min-h-screen bg-[#fafafa] dark:bg-[#0a0a0a] text-neutral-900 dark:text-neutral-100 relative overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-600 dark:selection:text-indigo-200 transition-colors">
       
       {/* ── Background Glow Blobs ────────────────────────────────────────── */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <motion.div
           animate={{
-            x: [0, 40, 0],
+            x: [0, 50, 0],
             y: [0, -30, 0],
-            scale: [1, 1.15, 1],
           }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[140px]"
+          className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[140px]"
         />
         <motion.div
           animate={{
-            x: [0, -50, 0],
+            x: [0, -40, 0],
             y: [0, 40, 0],
-            scale: [1, 1.2, 1],
           }}
           transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[35%] right-[10%] w-[450px] h-[450px] bg-teal-500/10 rounded-full blur-[130px]"
@@ -150,7 +150,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── Navbar ──────────────────────────────────────────────────────── */}
-      <header className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800/50">
+      <header className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800/50">
         <div className="flex items-center gap-2 sm:gap-2.5">
           <img src="/logo-icon.png" alt="GlassBox Logo" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-sm" />
           <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white bg-gradient-to-r from-neutral-900 dark:from-white via-neutral-600 dark:via-neutral-200 to-indigo-600 dark:to-indigo-300 bg-clip-text text-transparent">
@@ -161,28 +161,101 @@ export default function LandingPage() {
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2.5 sm:gap-4">
           <button
             onClick={scrollToDemo}
-            className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hidden sm:block"
+            className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hidden md:block"
           >
             Product Demo
           </button>
           <button
             onClick={() => router.push("/leaderboard")}
-            className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hidden sm:block"
+            className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hidden md:block"
           >
             Leaderboard
           </button>
+          <button
+            onClick={() => router.push("/templates")}
+            className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hidden md:block"
+          >
+            Templates
+          </button>
 
           <ThemeToggle />
+          
           <button
             onClick={handleTryItFree}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all duration-200 shadow-lg shadow-indigo-600/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98]"
+            className="hidden sm:inline-flex bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all duration-200 shadow-lg shadow-indigo-600/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98]"
           >
             Try it for free
           </button>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
+            className="md:hidden p-2 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
+
+        {/* Mobile Slide-down Glass Drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="absolute top-full left-0 right-0 z-40 bg-white/95 dark:bg-[#0d0d0f]/95 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden md:hidden"
+            >
+              <div className="p-5 flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    scrollToDemo();
+                  }}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/60 dark:border-neutral-800/60 text-left font-semibold text-sm text-neutral-800 dark:text-neutral-200 active:scale-[0.98] transition-all"
+                >
+                  <Play size={16} className="text-teal-500" />
+                  Product Demo
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    router.push("/leaderboard");
+                  }}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/60 dark:border-neutral-800/60 text-left font-semibold text-sm text-neutral-800 dark:text-neutral-200 active:scale-[0.98] transition-all"
+                >
+                  <Trophy size={16} className="text-amber-500" />
+                  Community Leaderboard
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    router.push("/templates");
+                  }}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/60 dark:border-neutral-800/60 text-left font-semibold text-sm text-neutral-800 dark:text-neutral-200 active:scale-[0.98] transition-all"
+                >
+                  <Layers size={16} className="text-indigo-500" />
+                  Public Templates Gallery
+                </button>
+
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleTryItFree();
+                  }}
+                  className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+                >
+                  <span>Try it for free</span>
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Live Counter Strip */}

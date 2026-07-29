@@ -70,28 +70,29 @@ export default function LeaderboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-neutral-900 dark:text-neutral-100 flex flex-col transition-colors">
       {/* Top Navbar */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 transition-colors">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 transition-colors">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <button
             onClick={() => router.push("/")}
-            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-sm flex items-center gap-1.5 transition-colors font-medium"
+            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-xs sm:text-sm flex items-center gap-1.5 transition-colors font-medium shrink-0"
           >
             <img src="/logo-icon.png" alt="GlassBox Logo" className="w-5 h-5 rounded object-contain" />
-            <span>← GlassBox</span>
+            <span className="hidden xs:inline">← GlassBox</span>
+            <span className="xs:hidden">←</span>
           </button>
-          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800" />
-          <span className="font-semibold text-sm flex items-center gap-2 text-neutral-900 dark:text-white">
-            <Trophy size={16} className="text-amber-500 dark:text-amber-400" />
-            Community Leaderboard
+          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800 shrink-0" />
+          <span className="font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 text-neutral-900 dark:text-white truncate">
+            <Trophy size={16} className="text-amber-500 dark:text-amber-400 shrink-0" />
+            <span className="truncate">Leaderboard</span>
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-2">
           <ThemeToggle />
           <UserButton />
         </div>
       </header>
 
-      <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-10 space-y-8">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8">
         {/* Header Hero */}
         <div className="bg-gradient-to-r from-amber-500/10 via-indigo-500/10 to-teal-500/10 border border-neutral-200 dark:border-neutral-800 rounded-3xl p-8 text-center relative overflow-hidden">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-4 py-1.5 mb-4">

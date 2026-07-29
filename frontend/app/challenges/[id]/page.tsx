@@ -110,27 +110,27 @@ export default function ChallengeVisitorPage() {
   return (
     <div className="flex flex-col h-screen bg-slate-50 dark:bg-[#0a0a0a] text-neutral-900 dark:text-neutral-100 transition-colors">
       {/* Topbar */}
-      <header className="flex items-center justify-between px-5 py-3 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 z-10 transition-colors">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between px-3.5 sm:px-5 py-2.5 sm:py-3 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 z-10 transition-colors gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <button
             onClick={() => router.push("/leaderboard")}
-            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-sm flex items-center gap-1.5 transition-colors"
+            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 text-xs sm:text-sm flex items-center gap-1.5 transition-colors shrink-0 font-medium"
           >
             <ArrowLeft size={14} />
-            Leaderboard
+            <span className="hidden xs:inline">Leaderboard</span>
           </button>
-          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800" />
-          <div className="flex items-center gap-2">
-            <Trophy size={15} className="text-amber-500 dark:text-amber-400" />
-            <span className="text-sm font-semibold text-neutral-900 dark:text-white">Challenge #{challengeId}</span>
-            <span className="text-xs text-neutral-500">by {challenge?.creator_name}</span>
+          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800 shrink-0" />
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <Trophy size={15} className="text-amber-500 dark:text-amber-400 shrink-0" />
+            <span className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-white truncate">Challenge #{challengeId}</span>
+            <span className="text-[10px] sm:text-xs text-neutral-500 truncate hidden sm:inline">by {challenge?.creator_name}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <ThemeToggle />
           {challenge && (
-            <div className="flex items-center gap-3 text-xs font-mono bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-3 py-1 rounded-lg">
+            <div className="hidden sm:flex items-center gap-3 text-xs font-mono bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-3 py-1 rounded-lg">
               <span className="text-neutral-600 dark:text-neutral-400">Attempts: <strong className="text-neutral-800 dark:text-neutral-200">{challenge.attempt_count}</strong></span>
               <span className="text-neutral-400 dark:text-neutral-600">•</span>
               <span className="text-emerald-600 dark:text-emerald-400">Solves: <strong>{challenge.correct_guess_count}</strong></span>

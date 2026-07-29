@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserButton, useAuth } from "@clerk/nextjs";
-import { Monitor, Eye, Download, Trophy, Check, X, Volume2, VolumeX, Search, Share2 } from "lucide-react";
+import { Monitor, Eye, Download, Trophy, Check, X, Volume2, VolumeX, Search, Share2, Menu, Layers } from "lucide-react";
 import { api, Node, Run, setAuthTokenGetter, getApiBase, getWsUrl } from "@/lib/api";
 import { useGlassboxStore } from "@/lib/store";
 import { playNodeCompleteSound } from "@/lib/sound";
@@ -38,6 +38,8 @@ export default function RunPage() {
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [runs, setRuns] = useState<Run[]>([]);
   const [copiedToast, setCopiedToast] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const { isOnline } = useNetworkStatus();
   const { selectedNodeId, setSelectedNodeId, viewMode, setViewMode, soundEnabled, toggleSound, addToast } = useGlassboxStore();
 
@@ -372,107 +374,226 @@ export default function RunPage() {
       <div className="flex flex-col h-screen bg-slate-50 dark:bg-[#0a0a0a] text-neutral-900 dark:text-neutral-100 transition-colors">
 
         {/* Topbar */}
-        <header className="flex items-center justify-between px-5 py-2.5 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 z-10 shadow-xs dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-colors gap-4">
-          {/* Left Group */}
-          <div className="flex items-center gap-3 min-w-0">
-            <button
-              id="back-link-btn"
-              onClick={() => router.push("/")}
-              className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 flex items-center gap-1.5 transition-colors shrink-0 font-medium"
-            >
-              <img src="/logo-icon.png" alt="GlassBox Logo" className="w-5 h-5 rounded object-contain" />
-              <span>← GlassBox</span>
-            </button>
-            <div className="h-3.5 w-px bg-neutral-200 dark:bg-neutral-800 shrink-0" />
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border border-current/20 flex items-center gap-1.5 shrink-0 ${statusColor[run?.status ?? "running"]}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${run?.status === "completed" ? "bg-emerald-400" : run?.status === "error" ? "bg-red-400" : "bg-amber-400 animate-pulse"}`} />
-              {run?.status ?? "…"}
-            </span>
-            <span className="text-neutral-800 dark:text-neutral-200 text-xs font-semibold truncate max-w-xs">{run?.name ?? run?.goal ?? "Loading…"}</span>
-            <NetworkStatusIndicator />
-          </div>
-
-          {/* Center View Toggle */}
-          <div className="flex justify-center shrink-0">
-            {ViewToggle}
-          </div>
-
-          {/* Right Group Actions */}
-          <div className="flex items-center gap-2 shrink-0">
-            <ThemeToggle />
-            <button
-              id="sound-toggle-btn"
-              onClick={toggleSound}
-              title={soundEnabled ? "Mute audio" : "Enable audio"}
-              className={`p-1.5 rounded-lg border text-xs flex items-center justify-center transition-colors ${
-                soundEnabled
-                  ? "bg-indigo-600/10 text-indigo-600 dark:text-indigo-300 border-indigo-500/30 dark:bg-indigo-600/20"
-                  : "bg-neutral-100 dark:bg-neutral-900 text-neutral-500 border-neutral-200 dark:border-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-300"
-              }`}
-            >
-              {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
-            </button>
-            <button
-              id="share-run-btn"
-              onClick={handleShareRun}
-              title="Generate public share link"
-              className={`text-xs px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-all shadow-xs ${
-                copiedToast
-                  ? "bg-emerald-600 text-white"
-                  : "bg-indigo-600 hover:bg-indigo-500 text-white"
-              }`}
-            >
-              {copiedToast ? <Check size={12} /> : <Share2 size={12} />}
-              {copiedToast ? "Copied!" : "Share"}
-            </button>
-            {aggregatorNode && (
+        <header className="relative z-30 flex flex-col border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md shrink-0 transition-colors shadow-xs dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+          {/* Main Bar */}
+          <div className="flex items-center justify-between px-4 sm:px-5 py-2.5 gap-3">
+            {/* Left Group */}
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <button
-                id="view-final-plan-topbar-btn"
-                onClick={() => setSelectedNodeId(aggregatorNode.id)}
-                className="text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors"
+                id="back-link-btn"
+                onClick={() => router.push("/")}
+                className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 flex items-center gap-1.5 transition-colors shrink-0 font-medium"
               >
-                <span>✨</span> View Plan &amp; Export
+                <img src="/logo-icon.png" alt="GlassBox Logo" className="w-5 h-5 rounded object-contain" />
+                <span className="hidden xs:inline">← GlassBox</span>
+                <span className="xs:hidden">←</span>
               </button>
-            )}
-            {run?.status === "completed" && (
-              <>
+              <div className="h-3.5 w-px bg-neutral-200 dark:bg-neutral-800 shrink-0" />
+              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border border-current/20 flex items-center gap-1.5 shrink-0 ${statusColor[run?.status ?? "running"]}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${run?.status === "completed" ? "bg-emerald-400" : run?.status === "error" ? "bg-red-400" : "bg-amber-400 animate-pulse"}`} />
+                {run?.status ?? "…"}
+              </span>
+              <span className="text-neutral-800 dark:text-neutral-200 text-xs font-semibold truncate max-w-[120px] xs:max-w-xs">{run?.name ?? run?.goal ?? "Loading…"}</span>
+              <NetworkStatusIndicator />
+            </div>
+
+            {/* Center View Toggle (Desktop) */}
+            <div className="hidden md:flex justify-center shrink-0">
+              {ViewToggle}
+            </div>
+
+            {/* Right Group Actions (Desktop) */}
+            <div className="hidden md:flex items-center gap-2 shrink-0">
+              <ThemeToggle />
+              <button
+                id="sound-toggle-btn"
+                onClick={toggleSound}
+                title={soundEnabled ? "Mute audio" : "Enable audio"}
+                className={`p-1.5 rounded-lg border text-xs flex items-center justify-center transition-colors ${
+                  soundEnabled
+                    ? "bg-indigo-600/10 text-indigo-600 dark:text-indigo-300 border-indigo-500/30 dark:bg-indigo-600/20"
+                    : "bg-neutral-100 dark:bg-neutral-900 text-neutral-500 border-neutral-200 dark:border-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-300"
+                }`}
+              >
+                {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
+              </button>
+              <button
+                id="share-run-btn"
+                onClick={handleShareRun}
+                title="Generate public share link"
+                className={`text-xs px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-all shadow-xs ${
+                  copiedToast
+                    ? "bg-emerald-600 text-white"
+                    : "bg-indigo-600 hover:bg-indigo-500 text-white"
+                }`}
+              >
+                {copiedToast ? <Check size={12} /> : <Share2 size={12} />}
+                {copiedToast ? "Copied!" : "Share"}
+              </button>
+              {aggregatorNode && (
                 <button
-                  id="roast-ai-btn"
-                  onClick={handleFetchRoast}
-                  className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-500 dark:text-red-400 border border-red-500/30 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-colors"
+                  id="view-final-plan-topbar-btn"
+                  onClick={() => setSelectedNodeId(aggregatorNode.id)}
+                  className="text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors"
                 >
-                  🔥 Roast AI
+                  <span>✨</span> View Plan &amp; Export
                 </button>
-                <button
-                  id="report-card-btn"
-                  onClick={handleFetchReportCard}
-                  className="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-colors"
-                >
-                  🏆 Report Card
-                </button>
-                <button
-                  id="submit-challenge-btn"
-                  onClick={() => {
-                    if (nodes.length > 0) setChallengeNodeId(nodes[0].id);
-                    setShowChallengeModal(true);
-                  }}
-                  className="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors"
-                >
-                  <Trophy size={12} className="text-amber-500 dark:text-amber-400" />
-                  Submit Challenge
-                </button>
-              </>
-            )}
-            <kbd
-              onClick={() => useGlassboxStore.getState().setPaletteOpen(true)}
-              className="cursor-pointer text-[11px] font-mono text-neutral-500 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-1.5 py-0.5 rounded hover:border-neutral-400 dark:hover:border-neutral-700 transition-colors"
-            >
-              ⌘K
-            </kbd>
-            <div className="ml-1">
+              )}
+              {run?.status === "completed" && (
+                <>
+                  <button
+                    id="roast-ai-btn"
+                    onClick={handleFetchRoast}
+                    className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-500 dark:text-red-400 border border-red-500/30 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-colors"
+                  >
+                    🔥 Roast AI
+                  </button>
+                  <button
+                    id="report-card-btn"
+                    onClick={handleFetchReportCard}
+                    className="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-colors"
+                  >
+                    🏆 Report Card
+                  </button>
+                  <button
+                    id="submit-challenge-btn"
+                    onClick={() => {
+                      if (nodes.length > 0) setChallengeNodeId(nodes[0].id);
+                      setShowChallengeModal(true);
+                    }}
+                    className="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors"
+                  >
+                    <Trophy size={12} className="text-amber-500 dark:text-amber-400" />
+                    Submit Challenge
+                  </button>
+                </>
+              )}
+              <kbd
+                onClick={() => useGlassboxStore.getState().setPaletteOpen(true)}
+                className="cursor-pointer text-[11px] font-mono text-neutral-500 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-1.5 py-0.5 rounded hover:border-neutral-400 dark:hover:border-neutral-700 transition-colors"
+              >
+                ⌘K
+              </kbd>
+              <div className="ml-1">
+                <UserButton />
+              </div>
+            </div>
+
+            {/* Right Group Actions (Mobile) */}
+            <div className="flex md:hidden items-center gap-1.5 shrink-0">
+              <button
+                onClick={handleShareRun}
+                title="Share link"
+                className={`text-xs px-2 py-1 rounded-lg font-medium flex items-center gap-1 transition-all ${
+                  copiedToast ? "bg-emerald-600 text-white" : "bg-indigo-600 text-white"
+                }`}
+              >
+                {copiedToast ? <Check size={12} /> : <Share2 size={12} />}
+              </button>
+              <ThemeToggle />
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle Actions Menu"
+                className="p-1 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors"
+              >
+                {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+              </button>
               <UserButton />
             </div>
           </div>
+
+          {/* Mobile View Toggle Bar */}
+          <div className="flex md:hidden items-center justify-center px-3 py-1.5 border-t border-neutral-200/60 dark:border-neutral-800/60 bg-neutral-50/80 dark:bg-neutral-900/60">
+            {ViewToggle}
+          </div>
+
+          {/* Mobile Drawer Menu */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="absolute top-full left-0 right-0 z-40 bg-white/95 dark:bg-[#0d0d0d]/95 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden md:hidden"
+              >
+                <div className="p-4 flex flex-col gap-2">
+                  {aggregatorNode && (
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setSelectedNodeId(aggregatorNode.id);
+                      }}
+                      className="flex items-center gap-2 p-2.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/30 text-xs font-semibold"
+                    >
+                      <span>✨</span> View Final Plan &amp; Export
+                    </button>
+                  )}
+
+                  {run?.status === "completed" && (
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          handleFetchRoast();
+                        }}
+                        className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-red-500/10 text-red-500 dark:text-red-400 border border-red-500/30 text-xs font-bold"
+                      >
+                        🔥 Roast AI
+                      </button>
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          handleFetchReportCard();
+                        }}
+                        className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold"
+                      >
+                        🏆 Report Card
+                      </button>
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          if (nodes.length > 0) setChallengeNodeId(nodes[0].id);
+                          setShowChallengeModal(true);
+                        }}
+                        className="col-span-2 flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30 text-xs font-medium"
+                      >
+                        <Trophy size={13} className="text-amber-500" />
+                        Submit Challenge
+                      </button>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      toggleSound();
+                    }}
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200"
+                  >
+                    <span className="flex items-center gap-2">
+                      {soundEnabled ? <Volume2 size={14} className="text-indigo-500" /> : <VolumeX size={14} className="text-neutral-400" />}
+                      Audio Effects
+                    </span>
+                    <span className="text-[10px] font-bold uppercase">{soundEnabled ? "On" : "Muted"}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      useGlassboxStore.getState().setPaletteOpen(true);
+                    }}
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Search size={14} className="text-indigo-500" />
+                      Search Commands
+                    </span>
+                    <kbd className="font-mono text-[10px] bg-neutral-200 dark:bg-neutral-800 px-1.5 py-0.5 rounded">⌘K</kbd>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </header>
 
         {/* DEVELOPER VIEW */}
@@ -488,17 +609,17 @@ export default function RunPage() {
                 <>
                   <div className="flex-1 relative overflow-hidden">
 
-                    {/* SEMANTIC SEARCH UI */}
-                    <div className="absolute top-4 left-4 z-20 w-80 bg-white/90 dark:bg-neutral-900/90 backdrop-blur border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl flex flex-col max-h-[70vh] overflow-hidden">
+                    {/* SEMANTIC SEARCH UI (Desktop & Responsive Mobile) */}
+                    <div className="absolute top-3 left-3 md:top-4 md:left-4 z-20 w-[calc(100vw-1.5rem)] sm:w-80 max-w-sm bg-white/90 dark:bg-neutral-900/90 backdrop-blur border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl flex flex-col max-h-[60vh] md:max-h-[70vh] overflow-hidden transition-all">
                       <form onSubmit={handleSearch} className="flex border-b border-neutral-200 dark:border-neutral-800/50">
                         <input 
                           type="text" 
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Semantic node search..." 
-                          className="w-full bg-transparent text-sm px-4 py-3 outline-none text-neutral-900 dark:text-neutral-200 placeholder-neutral-400 dark:placeholder-neutral-500"
+                          className="w-full bg-transparent text-sm px-3.5 py-2.5 md:px-4 md:py-3 outline-none text-neutral-900 dark:text-neutral-200 placeholder-neutral-400 dark:placeholder-neutral-500"
                         />
-                        <button type="submit" className="px-4 text-neutral-500 hover:text-white transition-colors" disabled={isSearching}>
+                        <button type="submit" className="px-3.5 md:px-4 text-neutral-500 hover:text-white transition-colors" disabled={isSearching}>
                           {isSearching ? <span className="animate-pulse">...</span> : <Search size={16} />}
                         </button>
                       </form>
