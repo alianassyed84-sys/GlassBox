@@ -1,0 +1,40 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+!.env.production.example
+backend/.env
+frontend/.env
+frontend/.env.local
+frontend/.env.production.example
+
+# Virtual environment & Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+glassbox.db
+backend/glassbox.db
+
+# Node / Next.js
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+build/
+dist/
+.vercel
+
+# IDE & OS files
+.DS_Store
+.vscode/
+.idea/
+*.log

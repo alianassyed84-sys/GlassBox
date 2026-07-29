@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+.dark ::-webkit-scrollbar-thumb { background: #262626; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #404040; }
+
+/* ── React Flow overrides ──────────────────────────────────────────────────── */
+
+/* BUG FIX: Remove stray white bar — ReactFlow injects a default light background
+   on .react-flow and .react-flow__container that bleeds through before painting */
+.react-flow,
+.react-flow__container,
+.react-flow__pane,
+.react-flow__renderer,
+.react-flow__zoompane {
+  background: transparent !important;
+}
+
+/* Kill any white panel backgrounds (source of the top-left white bar) */
+.react-flow__panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+/* Remove React Flow's built-in controls and minimap styling so our glass
+   controls are the only thing visible */
+.react-flow__controls,
+.react-flow__minimap {
+  display: none !important;
+}
+
+.react-flow__node {
+  cursor: pointer;
+}
+
+.react-flow__edge-path {
+  stroke-width: 1.8;
+}
+
+.react-flow__background {
+  background-color: transparent !important;
+}
+
+/* Edge hover brightening via CSS (React Flow adds .selected class on hover) */
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-width: 3 !important;
+  filter: brightness(1.2);
+}
+
+/* JSON syntax highlight colors */
+.json-key    { color: #0284c7; }
+.json-string { color: #16a34a; }
+.json-number { color: #dc2626; }
+.json-bool   { color: #7c3aed; }
+.json-null   { color: #6b7280; }
+
+.dark .json-key    { color: #7dd3fc; }
+.dark .json-string { color: #86efac; }
+.dark .json-number { color: #fca5a5; }
+.dark .json-bool   { color: #c4b5fd; }
+.dark .json-null   { color: #6b7280; }
+
+/* Shimmer keyframe for running nodes */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Smooth transitions — but NOT on transform to avoid fighting Framer Motion */
+*:not([data-framer-motion]) {
+  transition-property: background-color, border-color, color, opacity, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* BUG FIX: Kill any stray white bars from React Flow */
+.react-flow__panel.top.left,
+.react-flow__panel.top.right,
+.react-flow__attribution {
+  display: none !important;
+  background: transparent !important;
+}
+
+/* n8n-style animated edge */
+@keyframes n8n-flow {
+  from { stroke-dashoffset: 12; }
+  to { stroke-dashoffset: 0; }
+}
+.n8n-animated-edge {
+  animation: n8n-flow 0.5s linear infinite;
+}
+
+/* ── Clerk Auth Form Text Contrast Fixes ────────────────────────────────── */
+.dark .cl-card,
+.dark .cl-rootBox,
+.dark .cl-main {
+  color: #ffffff !important;
+}
+
+.dark .cl-formFieldInput,
+.dark .cl-input,
+.dark .cl-formFieldInputShowPasswordButton,
+.dark .cl-identityPreview,
+.dark .cl-userButtonPopoverCard {
+  color: #ffffff !important;
+}
+
+/* Force all form inputs to have crisp white typed text, visible background & caret */
+.dark .cl-formFieldInput,
+.dark .cl-input,
+.dark .cl-formFieldInput input,
+.dark input.cl-formFieldInput,
+.dark .cl-rootBox input,
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="tel"],
+.dark input[type="number"] {
+  color: #ffffff !important;
+  background-color: #161616 !important;
+  border-color: #262626 !important;
+  caret-color: #818cf8 !important;
+}
+
+.dark .cl-formFieldInput:focus,
+.dark .cl-input:focus,
+.dark input:focus {
+  color: #ffffff !important;
+  background-color: #161616 !important;
+  border-color: #6366f1 !important;
+}
+
+/* Ensure placeholder text is readable */
+.dark .cl-formFieldInput::placeholder,
+.dark .cl-input::placeholder,
+.dark input::placeholder {
+  color: #737373 !important;
+  opacity: 1 !important;
+}
+
+/* Fix browser autofill dark background & white text override */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #161616 inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* High contrast label and header text */
+.dark .cl-formFieldLabel,
+.dark .cl-headerTitle,
+.dark .cl-dividerText,
+.dark .cl-socialButtonsBlockButtonText,
+.dark .cl-footerActionText,
+.dark .cl-formHeaderTitle,
+.dark .cl-formHeaderSubtitle {
+  color: #f5f5f5 !important;
+}
+
+.dark .cl-formFieldSubtitle,
+.dark .cl-headerSubtitle,
+.dark .cl-footerActionLink {
+  color: #a3a3a3 !important;
+}
+
+/* Password eye button icon contrast */
+.dark .cl-formFieldInputShowPasswordButton,
+.dark .cl-formFieldInputShowPasswordIcon {
+  color: #a3a3a3 !important;
+}
+.dark .cl-formFieldInputShowPasswordButton:hover {
+  color: #ffffff !important;
+}
+
+/* ── Hide Clerk Development Mode Watermark / Badge ───────────────────────── */
+.cl-dev-badge,
+[class*="cl-dev-badge"],
+[class*="dev-badge"],
+[class*="development-badge"],
+[class*="DevelopmentMode"],
+.cl-internal-ph31vj,
+.cl-internal-1da01l8,
+.cl-internal-1x3j5u9,
+.cl-internal-1b80cve,
+div[class*="cl-dev"],
+div[class*="clerk-dev"],
+div[style*="z-index: 99999"],
+div[style*="z-index: 9999"],
+#clerk-components [class*="dev"],
+.cl-badge,
+a[href*="clerk.com"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ── Premium Styling for Clerk OTP / Verification Code Inputs ────────────── */
+.cl-otpCodeField,
+.cl-otpCodeFieldInputs,
+[class*="otpCodeField"] {
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  margin: 1rem 0 !important;
+}
+
+.cl-otpCodeFieldInput,
+[class*="otpCodeFieldInput"] {
+  background-color: #161616 !important;
+  border: 1.5px solid #333333 !important;
+  color: #ffffff !important;
+  font-family: var(--font-mono), monospace !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  width: 46px !important;
+  height: 54px !important;
+  text-align: center !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+.cl-otpCodeFieldInput:focus,
+.cl-otpCodeFieldInput:focus-visible,
+[class*="otpCodeFieldInput"]:focus {
+  border-color: #6366f1 !important;
+  background-color: #1a1a24 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3) !important;
+  outline: none !important;
+}
+
+/* Light mode fallback for OTP inputs */
+:root:not(.dark) .cl-otpCodeFieldInput,
+:root:not(.dark) [class*="otpCodeFieldInput"] {
+  background-color: #ffffff !important;
+  border: 1.5px solid #e5e7eb !important;
+  color: #111827 !important;
+}
+
+:root:not(.dark) .cl-otpCodeFieldInput:focus {
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2) !important;
+}
+
