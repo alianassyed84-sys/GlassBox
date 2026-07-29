@@ -116,17 +116,11 @@
   color: #ffffff !important;
 }
 
-/* Force all form inputs to have crisp white typed text, visible background & caret */
+/* Force standard text inputs to have crisp white typed text & visible background */
 .dark .cl-formFieldInput,
 .dark .cl-input,
-.dark .cl-formFieldInput input,
 .dark input.cl-formFieldInput,
-.dark .cl-rootBox input,
-.dark input[type="text"],
-.dark input[type="email"],
-.dark input[type="password"],
-.dark input[type="tel"],
-.dark input[type="number"] {
+.dark .cl-formFieldInput input {
   color: #ffffff !important;
   background-color: #161616 !important;
   border-color: #262626 !important;
@@ -134,8 +128,7 @@
 }
 
 .dark .cl-formFieldInput:focus,
-.dark .cl-input:focus,
-.dark input:focus {
+.dark .cl-input:focus {
   color: #ffffff !important;
   background-color: #161616 !important;
   border-color: #6366f1 !important;
@@ -143,8 +136,7 @@
 
 /* Ensure placeholder text is readable */
 .dark .cl-formFieldInput::placeholder,
-.dark .cl-input::placeholder,
-.dark input::placeholder {
+.dark .cl-input::placeholder {
   color: #737373 !important;
   opacity: 1 !important;
 }
@@ -185,30 +177,16 @@
   color: #ffffff !important;
 }
 
-/* ── Hide Clerk Development Mode Watermark / Badge ───────────────────────── */
-.cl-dev-badge,
-[class*="cl-dev-badge"],
-[class*="dev-badge"],
-[class*="development-badge"],
-[class*="DevelopmentMode"],
-.cl-internal-ph31vj,
-/* ── Completely Hide Clerk Development Mode Badge & Footer Branding ─────── */
+/* ── Hide Clerk Development Mode Watermark & Footer Branding ────────────── */
 .cl-devModeBadge,
+.cl-dev-badge,
+[class*="cl-devModeBadge"],
 .cl-footer,
 .cl-cardFooter,
 .cl-internal-b3332d,
 .cl-internal-1da01l8,
 .cl-internal-1x3j5u9,
 .cl-internal-1b80cve,
-[class*="devMode"],
-[class*="DevMode"],
-[class*="dev-mode"],
-[class*="development"],
-div[class*="cl-dev"],
-div[class*="clerk-dev"],
-div[style*="z-index: 99999"],
-div[style*="z-index: 9999"],
-#clerk-components [class*="dev"],
 .cl-badge,
 a[href*="clerk.com"] {
   display: none !important;
@@ -222,83 +200,106 @@ a[href*="clerk.com"] {
 }
 
 /* ── Premium Styling for Clerk OTP / Verification Code Inputs ────────────── */
+
+/* CRITICAL BUG FIX: Ensure Clerk's invisible OTP master overlay input stays transparent */
+.cl-otpCodeField input[autocomplete="one-time-code"],
+.cl-otpCodeFieldInputs input[autocomplete="one-time-code"],
+.cl-rootBox input[autocomplete="one-time-code"],
+input[data-input-otp-target="true"],
+.cl-otpCodeField input[style*="opacity"],
+.cl-otpCodeField input[style*="position: absolute"] {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: transparent !important;
+  caret-color: transparent !important;
+  opacity: 0 !important;
+}
+
 .cl-otpCodeField,
 .cl-otpCodeFieldInputs,
 [class*="otpCodeField"] {
   display: flex !important;
   flex-direction: row !important;
-  gap: 10px !important;
+  gap: 8px !important;
   justify-content: center !important;
   align-items: center !important;
-  margin: 1.25rem auto !important;
+  margin: 1rem auto !important;
   width: 100% !important;
 }
 
+/* Visible individual digit slot boxes */
 .cl-otpCodeFieldInput,
 [class*="otpCodeFieldInput"],
+div[data-input-otp-slot],
 input[data-otp-input="true"] {
-  background-color: #141418 !important;
-  border: 2px solid #2e2e38 !important;
+  background-color: #18181b !important;
+  border: 2px solid #27272a !important;
   color: #ffffff !important;
   font-family: var(--font-mono), monospace !important;
-  font-size: 1.5rem !important;
+  font-size: 1.35rem !important;
   font-weight: 800 !important;
-  border-radius: 14px !important;
-  width: 46px !important;
-  height: 56px !important;
+  border-radius: 12px !important;
+  width: 42px !important;
+  height: 52px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   text-align: center !important;
   padding: 0 !important;
   margin: 0 !important;
-  line-height: 56px !important;
+  line-height: 52px !important;
   caret-color: #818cf8 !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
 
 @media (min-width: 640px) {
   .cl-otpCodeField,
   .cl-otpCodeFieldInputs,
   [class*="otpCodeField"] {
-    gap: 12px !important;
+    gap: 10px !important;
   }
   .cl-otpCodeFieldInput,
   [class*="otpCodeFieldInput"] {
-    width: 52px !important;
-    height: 60px !important;
-    font-size: 1.65rem !important;
-    line-height: 60px !important;
+    width: 48px !important;
+    height: 56px !important;
+    font-size: 1.5rem !important;
+    line-height: 56px !important;
   }
 }
 
 .cl-otpCodeFieldInput:hover,
 [class*="otpCodeFieldInput"]:hover {
-  border-color: #4f46e5 !important;
-  background-color: #191922 !important;
+  border-color: #3f3f46 !important;
+  background-color: #202025 !important;
 }
 
 .cl-otpCodeFieldInput:focus,
 .cl-otpCodeFieldInput:focus-visible,
 .cl-otpCodeFieldInput[data-status="focused"],
+.cl-otpCodeFieldInput[data-active="true"],
 [class*="otpCodeFieldInput"]:focus {
   border-color: #6366f1 !important;
-  background-color: #1e1e2d !important;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25), 0 4px 14px rgba(99, 102, 241, 0.3) !important;
+  background-color: #1c1c28 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3) !important;
   outline: none !important;
-  transform: translateY(-1px) scale(1.03) !important;
 }
 
 /* Light mode fallback for OTP inputs */
 :root:not(.dark) .cl-otpCodeFieldInput,
 :root:not(.dark) [class*="otpCodeFieldInput"] {
   background-color: #f8fafc !important;
-  border: 2px solid #cbd5e1 !important;
+  border: 2px solid #e2e8f0 !important;
   color: #0f172a !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 :root:not(.dark) .cl-otpCodeFieldInput:focus {
   background-color: #ffffff !important;
   border-color: #4f46e5 !important;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.18), 0 4px 12px rgba(79, 70, 229, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2) !important;
 }
+
 

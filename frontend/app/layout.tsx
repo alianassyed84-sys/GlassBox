@@ -58,9 +58,11 @@ const clerkAppearance = {
     formFieldAction: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium",
     devModeBadge: "hidden text-[0px] w-0 h-0 p-0 m-0 overflow-hidden opacity-0 pointer-events-none display-none",
     footer: "bg-transparent text-neutral-500 text-xs",
-    otpCodeField: "gap-2 sm:gap-3 flex justify-center my-4",
+    otpCodeField: "gap-2 sm:gap-3 flex justify-center my-4 w-full",
+    otpCodeFieldInputs: "gap-2 sm:gap-3 flex justify-center items-center",
     otpCodeFieldInput:
-      "w-10 h-12 sm:w-11 sm:h-12 bg-neutral-100 dark:bg-[#18181c] border border-neutral-300 dark:border-neutral-700/80 text-neutral-900 dark:text-white text-center font-mono font-extrabold text-xl rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition-all shadow-inner placeholder:text-neutral-500",
+      "w-10 h-12 sm:w-12 sm:h-14 bg-neutral-100 dark:bg-[#18181b] border-2 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-center font-mono font-bold text-xl rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 transition-all shadow-xs placeholder:text-neutral-500",
+    resendCodeLink: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 text-xs font-semibold",
   },
 };
 
