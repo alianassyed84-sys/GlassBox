@@ -139,12 +139,12 @@ async def _enqueue_continue_job(run_id: int, node_id: int, answers: dict) -> Non
 
 # ── Public routes ─────────────────────────────────────────────────────────────
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def root():
     return {"status": "ok", "service": "glassbox-backend", "version": "1.0.0"}
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health_check():
     return {
         "status": "ok",
