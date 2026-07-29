@@ -162,7 +162,7 @@ async def create_run(
     db: Session = Depends(get_db),
 ):
     """Start a new pipeline run for the authenticated user."""
-    check_rate_limit(request, limit=5, window_seconds=60, key_prefix="runs")
+    check_rate_limit(request, limit=60, window_seconds=60, key_prefix="runs")
     name = body.goal[:60] + ("…" if len(body.goal) > 60 else "")
     run = models.Run(user_id=current_user_id, name=name, goal=body.goal, status="running")
     db.add(run)

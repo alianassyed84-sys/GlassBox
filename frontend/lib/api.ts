@@ -103,7 +103,7 @@ async function getAuthToken(): Promise<string | null> {
   return token;
 }
 
-async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+async function apiFetch<T>(path: string, options?: RequestInit, retries: number = 3): Promise<T> {
   const token = await getAuthToken();
   
   const headers: Record<string, string> = {
@@ -115,16 +115,28 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers,
-  });
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const res = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers,
+      });
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`API ${res.status}: ${err}`);
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(`API ${res.status}: ${err}`);
+      }
+      return await res.json() as T;
+    } catch (e: any) {
+      lastError = e;
+      if (attempt < retries - 1) {
+        await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+      }
+    }
   }
-  return res.json() as Promise<T>;
+
+  throw lastError || new Error("Failed to fetch");
 }
 
 export const api = {
