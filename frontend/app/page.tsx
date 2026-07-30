@@ -91,12 +91,7 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [dismissedInstallBanner]);
 
-  // Scroll to / dashboard if user is already signed in
-  useEffect(() => {
-    if (isLoaded && userId) {
-      router.push("/dashboard");
-    }
-  }, [isLoaded, userId, router]);
+  // Redirection is handled dynamically on action buttons rather than automatically forcing authenticated users away from the landing page.
 
   // Demo section parallax scroll transform
   const demoRef = useRef<HTMLDivElement>(null);
@@ -108,10 +103,14 @@ export default function LandingPage() {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.94, 1, 0.98]);
 
   const handleTryItFree = () => {
-    openSignUp({
-      fallbackRedirectUrl: "/dashboard",
-      forceRedirectUrl: "/dashboard",
-    });
+    if (userId) {
+      router.push("/dashboard");
+    } else {
+      openSignUp({
+        fallbackRedirectUrl: "/dashboard",
+        forceRedirectUrl: "/dashboard",
+      });
+    }
   };
 
   const scrollToDemo = () => {
@@ -187,7 +186,7 @@ export default function LandingPage() {
             onClick={handleTryItFree}
             className="hidden sm:inline-flex bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all duration-200 shadow-lg shadow-indigo-600/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98]"
           >
-            Try it for free
+            {userId ? "Go to Dashboard" : "Try it for free"}
           </button>
 
           {/* Mobile Menu Toggle */}
@@ -249,7 +248,7 @@ export default function LandingPage() {
                   }}
                   className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
                 >
-                  <span>Try it for free</span>
+                  <span>{userId ? "Go to Dashboard" : "Try it for free"}</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -311,7 +310,7 @@ export default function LandingPage() {
             onClick={handleTryItFree}
             className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base px-8 py-4 rounded-2xl transition-all duration-200 shadow-[0_0_35px_-5px_rgba(99,102,241,0.5)] hover:shadow-[0_0_45px_-5px_rgba(99,102,241,0.7)] hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-2 group"
           >
-            Try it for free
+            {userId ? "Go to Dashboard" : "Try it for free"}
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
 
